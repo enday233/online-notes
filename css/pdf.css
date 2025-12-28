@@ -335,6 +335,11 @@ body.pdf-active .content-wrapper {
 
 /* 响应式设计 */
 @media (max-width: 768px) {
+    /* 修复：移动端减去顶部导航栏高度 */
+    .pdf-viewer {
+        height: calc(100vh - 56px);
+    }
+
     .pdf-toolbar-content {
         flex-direction: column;
         gap: 12px;

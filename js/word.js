@@ -17,7 +17,6 @@ const WordRenderer = {
             return;
         }
 
-        console.log('WordRenderer v4.0 [完整目录版] 启动:', docxUrl);
         this.showLoading();
         document.body.classList.add('word-active');
 
@@ -37,8 +36,6 @@ const WordRenderer = {
                 ignoreWidth: true,
                 breakPages: true
             });
-
-            console.log('Word 核心内容渲染完成');
 
             // 后置处理：提取目录、初始化缩放
             setTimeout(() => {
@@ -121,26 +118,17 @@ const WordRenderer = {
 
         // 方法1：标准HTML标题标签
         headings = container.querySelectorAll('h1, h2, h3, h4, h5, h6');
-        console.log('TOC: 找到标准标题', headings.length, '个');
+
 
         // 方法2：如果没有标准标题，尝试通过docx样式类查找
         if (headings.length === 0) {
             // docx-preview可能使用特定的样式类标识标题
             const allParagraphs = container.querySelectorAll('p, div');
-            console.log('TOC: 检查段落数量', allParagraphs.length);
-
             // 输出前几个段落的详细信息用于调试
             if (allParagraphs.length > 0) {
-                console.log('TOC: 样例段落分析（前3个）:');
+
                 Array.from(allParagraphs).slice(0, 3).forEach((p, i) => {
                     const computed = window.getComputedStyle(p);
-                    console.log(`  段落 ${i}:`, {
-                        text: p.textContent.substring(0, 50),
-                        fontSize: computed.fontSize,
-                        fontWeight: computed.fontWeight,
-                        style: p.getAttribute('style'),
-                        className: p.className
-                    });
                 });
             }
 
@@ -165,7 +153,7 @@ const WordRenderer = {
                     fontSize >= 18 // 字号明显较大
                 );
             });
-            console.log('TOC: 通过样式找到标题', headings.length, '个');
+
 
             // 如果还是没有，尝试通过字体大小和字重判断
             if (headings.length === 0) {
@@ -179,7 +167,6 @@ const WordRenderer = {
                     return parseFloat(style.fontSize);
                 });
                 const avgSize = fontSizes.reduce((a, b) => a + b, 0) / fontSizes.length;
-                console.log('TOC: 平均字号:', avgSize);
 
                 headings = paragraphs.filter(p => {
                     const computed = window.getComputedStyle(p);
@@ -191,24 +178,18 @@ const WordRenderer = {
                     return (size > avgSize * 1.15) ||
                            (weight >= 600 && text.length < 100);
                 });
-                console.log('TOC: 通过字体分析找到标题', headings.length, '个');
+
 
                 // 输出找到的标题样本
                 if (headings.length > 0) {
-                    console.log('TOC: 找到的标题样本:');
                     Array.from(headings).slice(0, 5).forEach((h, i) => {
                         const computed = window.getComputedStyle(h);
-                        console.log(`  ${i}:`, h.textContent.substring(0, 50), {
-                            fontSize: computed.fontSize,
-                            fontWeight: computed.fontWeight
-                        });
                     });
                 }
             }
         }
 
         if (headings.length === 0) {
-            console.warn('TOC: 未发现任何标题结构');
             tocNav.innerHTML = '<p class="toc-empty">未发现文档目录结构</p>';
             return;
         }

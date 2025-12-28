@@ -241,13 +241,9 @@
         transition: transform 0.3s ease;
     }
 
-    .toc-sidebar:not(.collapsed) {
+    /* 移动端通过 mobile-open 类控制显示 */
+    .toc-sidebar.mobile-open {
         transform: translateX(0);
-    }
-
-    .toc-sidebar.collapsed {
-        margin-right: 0;
-        transform: translateX(100%);
     }
 
     .toc-toggle {
