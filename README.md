@@ -11,6 +11,7 @@
 - 📂 **树形目录**: 自动扫描`posts`目录，支持多级文件夹作为分类。
 - ↔️ **侧边栏**: 左右侧边栏均可展开/收缩。
 - 📑 **文章目录 (TOC)**: 自动生成文章标题目录，支持折叠。
+- 📄 **PDF阅读增强**: 支持PDF目录自动同步、高亮跟随及异步页码解析。
 - 🎨 **主题切换**: 内置多种主题，支持自定义主题颜色。
 - 📱 **响应式设计**: 适配PC、平板和手机。
 - 🚀 **纯静态**: 无需后端，可轻松部署在任何静态托管服务。
@@ -125,6 +126,7 @@ note-md/
 
 -   **核心**: HTML5, CSS3, JavaScript (ES6+)
 -   **Markdown解析**: [marked.js](https://marked.js.org/)
+-   **PDF渲染**: [PDF.js](https://mozilla.github.io/pdf.js/)
 -   **代码高亮**: [highlight.js](https://highlightjs.org/)
 -   **数据来源**: GitHub API 或 本地`json`文件
 

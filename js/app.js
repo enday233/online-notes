@@ -17,6 +17,7 @@
 
             // 初始化各模块
             Markdown.init(this.elements.content);
+            PDFRenderer.init(this.elements.content);
             Sidebar.init();
             TOC.init();
             Mobile.init();
@@ -37,6 +38,8 @@
         bindScrollEvent: function() {
             if (this.elements.contentWrapper) {
                 this.elements.contentWrapper.addEventListener('scroll', () => {
+                    // 如果 PDF 激活，不触发 Markdown 的目录滚动高亮
+                    if (document.body.classList.contains('pdf-active')) return;
                     TOC.highlightOnScroll(this.elements.content);
                 });
             }
@@ -72,16 +75,30 @@
                 Markdown.showWelcome();
                 Sidebar.updateActiveLink(null);
                 TOC.clear();
+                // 清理PDF渲染器
+                PDFRenderer.cleanup();
             }
         },
 
         loadPost: function(filepath) {
             Loader.loadPost(filepath)
-                .then(markdown => {
-                    Markdown.render(markdown);
-                    TOC.generate(this.elements.content);
+                .then(result => {
+                    if (result.type === 'markdown') {
+                        // 清理PDF渲染器
+                        PDFRenderer.cleanup();
+                        // 渲染Markdown
+                        Markdown.render(result.content);
+                        TOC.generate(this.elements.content);
+                    } else if (result.type === 'pdf') {
+                        // 清理之前的内容
+                        TOC.clear();
+                        // 渲染PDF
+                        PDFRenderer.render(result.url);
+                    }
                 })
                 .catch(error => {
+                    // 清理所有渲染器
+                    PDFRenderer.cleanup();
                     Markdown.showError(error.message);
                     TOC.clear();
                 });

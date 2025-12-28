@@ -63,7 +63,17 @@ const Loader = {
                     type: 'file',
                     name: item.name,
                     title: item.name.replace(/\.md$/, ''),
-                    path: relativePath
+                    path: relativePath,
+                    fileType: 'markdown'
+                });
+            } else if (item.name.endsWith('.pdf')) {
+                const relativePath = item.path.replace(/^posts\//, '');
+                result.push({
+                    type: 'file',
+                    name: item.name,
+                    title: item.name.replace(/\.pdf$/, ''),
+                    path: relativePath,
+                    fileType: 'pdf'
                 });
             }
         }
@@ -79,14 +89,29 @@ const Loader = {
             const { owner, repo, branch, postsPath } = BlogConfig.github;
             url = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${postsPath}/${filepath}`;
         } else {
-            url = 'posts/' + filepath;
+            // 确保路径处理健壮，防止重复拼接 posts/
+            const cleanPath = filepath.startsWith('/') ? filepath.slice(1) : filepath;
+            url = cleanPath.startsWith('posts/') ? cleanPath : 'posts/' + cleanPath;
         }
 
+        // 如果是PDF文件，直接返回URL
+        if (filepath.endsWith('.pdf')) {
+            return Promise.resolve({
+                type: 'pdf',
+                url: url
+            });
+        }
+
+        // Markdown文件，获取文本内容
         return fetch(url)
             .then(response => {
                 if (!response.ok) throw new Error('文章不存在');
                 return response.text();
-            });
+            })
+            .then(content => ({
+                type: 'markdown',
+                content: content
+            }));
     },
 
     // 加载文章树
