@@ -1,4 +1,4 @@
-/**
+y/**
  * 博客配置文件
  */
 const BlogConfig = {
@@ -8,9 +8,9 @@ const BlogConfig = {
     // GitHub仓库配置（用于动态读取文件目录）
     github: {
         // 仓库所有者（你的GitHub用户名）
-        owner: '',
+        owner: 'enday233',
         // 仓库名称
-        repo: '',
+        repo: 'online-notes',
         // 分支名称
         branch: 'main',
         // posts目录路径
